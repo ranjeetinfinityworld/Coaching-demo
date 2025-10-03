@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+<!-- Toggle Button -->
+<button id="toggleTheme">☀️ Light Mode</button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ranjeet Coaching — Demo</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========== Variables ========== */
+    :root{
+      --bg:#0f1724; --card:#07132a; --accent:#10b981; --accent-2:#06b6d4;
+      --muted:#94a3b8; --glass: rgba(255,255,255,0.03); --maxw:1100px;
+      --radius:12px;
+      --soft-shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+
+    /* ========== Reset & Base ========== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:linear-gradient(180deg,#07102a 0%, #061021 60%);
+      color:#e6eef8;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      -webkit-font-smoothing:antialiased;line-height:1.5;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block;border-radius:8px}
+
+    /* ========== Layout ========== */
+    .container{max-width:var(--maxw);margin:30px auto;padding:16px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#012;box-shadow:var(--soft-shadow)}
+    .nav{display:flex;gap:16px;align-items:center}
+    .nav a{color:var(--muted);font-weight:600}
+    .nav a:hover{color:var(--accent)}
+
+    /* Mobile menu */
+    .menu-btn{display:none;background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:center;padding:24px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:var(--soft-shadow)}
+    .hero h1{margin:0;font-size:30px;letter-spacing:0.2px}
+    .muted{color:var(--muted);font-size:14px}
+
+    /* CTA */
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#062019;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 10px 30px rgba(16,185,129,0.12)}
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 12px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    /* Services */
+    .section{margin-top:24px}
+    .card{background:var(--card);padding:16px;border-radius:12px}
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+    .service{background:var(--glass);padding:14px;border-radius:10px}
+    .service h3{margin:8px 0 0;font-size:16px}
+    .service p{color:var(--muted);font-size:13px;margin-top:6px}
+
+    /* Courses & Pricing */
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .price{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:18px;border-radius:12px}
+    .price .tag{display:inline-block;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.03);font-weight:700;margin-bottom:10px}
+
+    /* Schedule (accordion) */
+    .accordion-item{background:var(--glass);padding:12px;border-radius:8px;margin-bottom:10px;cursor:pointer}
+    .accordion-item h4{margin:0;display:flex;justify-content:space-between;align-items:center}
+    .accordion-content{max-height:0;overflow:hidden;transition:max-height .28s ease;padding:0 0}
+
+    /* Testimonials (simple carousel) */
+    .testimonials{display:flex;gap:12px;align-items:center}
+    .testimonial{min-width:260px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px}
+
+    /* Contact */
+    form{display:grid;gap:10px;margin-top:10px}
+    input,textarea,select{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:inherit}
+    textarea{min-height:100px;resize:vertical}
+
+    /* Footer */
+    footer{margin-top:30px;color:var(--muted);font-size:13px;text-align:center;padding:18px}
+
+    /* Small utilities */
+    .flex{display:flex;gap:12px;align-items:center}
+    .center{text-align:center}
+    .chip{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-weight:700;font-size:13px}
+
+    /* Modal for timetable details */
+    .modal{position:fixed;inset:0;background:rgba(2,6,23,0.75);display:flex;align-items:center;justify-content:center;visibility:hidden;opacity:0;transition:all .15s}
+    .modal.open{visibility:visible;opacity:1}
+    .modal .box{background:#071428;padding:18px;border-radius:12px;max-width:760px;width:92%;box-shadow:0 30px 80px rgba(2,6,23,0.7)}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr; text-align:center}
+      .services{grid-template-columns:repeat(2,1fr)}
+      .grid-3{grid-template-columns:repeat(2,1fr)}
+      .nav{display:none}
+      .menu-btn{display:inline-block}
+      header{flex-direction:column;align-items:flex-start;gap:10px}
+    }
+    @media (max-width:520px){
+      .services{grid-template-columns:1fr}
+      .grid-3{grid-template-columns:1fr}
+      .testimonial{min-width:100%}
+    }
+    body.light {
+  background: #f9fafb;
+  color: #1e293b;
+}
+body.light .card {
+  background: #ffffff;
+  color: #1e293b;
+}
+body.light .muted {
+  color: #475569;
+}
+body.dark #toggleTheme {
+  background: #334155;
+  color: #f1f5f9;
+}
+/* Toggle Button */
+#toggleTheme {
+  position: fixed;
+  top: 20px;
+  right:150px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9999;
+}
+
+body.dark #toggleTheme {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+body.light #toggleTheme {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="logo">RC</div>
+        <div>
+          <div style="font-weight:800">RANJEET CLASSES</div>
+          <div class="muted" style="font-size:13px">Exam-focused • Experienced Tutors • Local Support</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#courses">Courses</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn">Menu</button>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero card" id="top">
+      <div>
+        <div class="chip">Now Enrolling • Limited Seats</div>
+        <h1>Crack Competitive Exams with <span style="color:var(--accent)">RANJEET CLASSES</span></h1>
+        <p class="muted">Focused coaching for SSC, JEE mains, NEET & board toppers. Small batches, personalised attention and weekly tests.</p>
+
+        <div style="margin-top:14px" class="flex">
+          <button class="btn" id="ctaEnroll">Enroll Now</button>
+          <button class="ghost" id="ctaDemo">Request Demo Class</button>
+        </div>
+
+        <div class="services section">
+          <div class="service card">
+            <strong>Expert Tutors</strong>
+            <h3>Experienced mentors</h3>
+            <p>Teachers with proven track record & practical problem-solving approach.</p>
+          </div>
+          <div class="service card">
+            <strong>Small Batches</strong>
+            <h3>Personal attention</h3>
+            <p>Max 12 students per batch to ensure quality learning.</p>
+          </div>
+          <div class="service card">
+            <strong>Weekly Tests</strong>
+            <h3>Performance-driven</h3>
+            <p>Regular tests and detailed feedback to track progress.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="card" style="text-align:center">
+        <div style="font-weight:700;margin-bottom:8px">Demo Preview</div>
+        <img src="https://picsum.photos/seed/coaching/360/220" alt="demo">
+        <div class="muted" style="margin-top:8px">Mobile-first • Fast-loading • Contact-ready</div>
+      </aside>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="section">
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1" class="card">
+          <h2 style="margin-top:0">About Ranjeet classes</h2>
+          <p class="muted">Ranjeet classes has been helping students achieve top ranks for 8+ years. We focus on fundamentals, practice, and exam strategy tailored to each student.</p>
+          <ul style="color:var(--muted)">
+            <li>Structured syllabus & weekly milestones</li>
+            <li>Recorded lectures & revision notes</li>
+            <li>Personal mentor for doubt-solving</li>
+          </ul>
+        </div>
+
+        <div style="width:320px" class="card">
+          <h3 style="margin-top:0">Contact Info</h3>
+          <p class="muted">📍 Bhagalpur,Bihar-812004<br>📞 +91-6005044761<br>✉️ rk962838@gmail.com</p>
+          <div style="margin-top:10px">
+            <button class="btn" id="callBtn">Call Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses -->
+    <section id="courses" class="section">
+      <h2>Our Courses</h2>
+      <div class="grid-3" style="margin-top:12px">
+        <div class="price card">
+          <div class="tag">JEE Main</div>
+          <h3>Foundation to Advanced</h3>
+          <p class="muted">Theory + problem solving + mocks. 6 months course.</p>
+          <div style="margin-top:12px" class="flex">
+            <button class="btn small enroll" data-course="JEE Main">Enroll</button>
+            <button class="ghost" onclick="openTimetable('JEE Main')">View Schedule</button>
+          </div>
+        </div>
+        <div class="price card">
+          <div class="tag">NEET</div>
+          <h3>Conceptual Biology & Practice</h3>
+          <p class="muted">Focused biology sessions and test practice. 6 months course.</p>
+          <div style="margin-top:12px" class="flex">
+            <button class="btn small enroll" data-course="NEET">Enroll</button>
+            <button class="ghost" onclick="openTimetable('NEET')">View Schedule</button>
+          </div>
+        </div>
+        <div class="price card">
+          <div class="tag">Board Toppers</div>
+          <h3>Class 10 & 12 Crash</h3>
+          <p class="muted">Revision series, previous year papers, quick doubt sessions.</p>
+          <div style="margin-top:12px" class="flex">
+            <button class="btn small enroll" data-course="Boards">Enroll</button>
+            <button class="ghost" onclick="openTimetable('Boards')">View Schedule</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule / Accordion -->
+    <section id="schedule" class="section">
+      <h2>Weekly Timetable</h2>
+      <div style="margin-top:10px">
+        <div class="accordion-item" data-for="Mon">
+          <h4>Monday — Maths (5pm - 7pm) <span class="muted">Tap to view details</span></h4>
+          <div class="accordion-content"><p class="muted">Algebra practice + assignments + doubt clearing.</p></div>
+        </div>
+
+        <div class="accordion-item" data-for="Tue">
+          <h4>Tuesday — Physics (5pm - 7pm) <span class="muted">Tap to view details</span></h4>
+          <div class="accordion-content"><p class="muted">Concepts and numerical problem sets.</p></div>
+        </div>
+
+        <div class="accordion-item" data-for="Wed">
+          <h4>Wednesday — Chemistry (5pm - 7pm) <span class="muted">Tap to view details</span></h4>
+          <div class="accordion-content"><p class="muted">Organic + Inorganic quick revision.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="section">
+      <h2>What Students Say</h2>
+      <div style="margin-top:12px" class="testimonials">
+        <div class="testimonial card">
+          <strong>Priya K.</strong>
+          <p class="muted">"Improved my scores by 40% in 3 months. Teachers are great!"</p>
+        </div>
+        <div class="testimonial card">
+          <strong>Arjun S.</strong>
+          <p class="muted">"Best doubt solving system — quick and helpful."</p>
+        </div>
+        <div class="testimonial card">
+          <strong>Sneha M.</strong>
+          <p class="muted">"Weekly tests helped me gain confidence for boards."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="section">
+      <h2>Pricing Plans</h2>
+      <div style="margin-top:12px" class="grid-3">
+        <div class="price card">
+          <h3>Starter</h3>
+          <p class="muted">Basis concept classes • 2 tests/month</p>
+          <div style="margin-top:12px" class="flex">
+            <div style="font-weight:800">₹3,999</div>
+            <button class="btn enroll" data-course="Starter">Join</button>
+          </div>
+        </div>
+        <div class="price card">
+          <h3>Standard</h3>
+          <p class="muted">Full syllabus • 4 tests/month</p>
+          <div style="margin-top:12px" class="flex">
+            <div style="font-weight:800">₹6,999</div>
+            <button class="btn enroll" data-course="Standard">Join</button>
+          </div>
+        </div>
+        <div class="price card">
+          <h3>Premium</h3>
+          <p class="muted">Personal mentor • Unlimited tests</p>
+          <div style="margin-top:12px" class="flex">
+            <div style="font-weight:800">₹12,999</div>
+            <button class="btn enroll" data-course="Premium">Join</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="section card">
+      <h2 style="margin-top:0">Get in Touch / Book Demo</h2>
+      <p class="muted">Fill this form and we will call you to schedule a demo class.</p>
+
+      <form id="contactForm">
+        <input type="text" id="cname" placeholder="Full name" required>
+        <input type="tel" id="cphone" placeholder="Phone (eg. +91-6005044761)" required>
+        <select id="ccourse">
+          <option value="">Select Course (optional)</option>
+          <option>JEE Main</option>
+          <option>NEET</option>
+          <option>Boards</option>
+        </select>
+        <textarea id="cmsg" placeholder="Any message or preferred time"></textarea>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button type="submit" class="btn">Send Request</button>
+          <button type="button" class="ghost" id="resetBtn">Reset</button>
+        </div>
+      </form>
+    </section>
+
+    <footer>
+      © <span id="year"></span> Ranjeet classes • Designed for demo & testing
+    </footer>
+  </div>
+
+  <!-- Timetable Modal -->
+  <div class="modal" id="modal">
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="modalTitle" style="margin:0">Schedule</h3>
+        <button class="ghost" id="closeModal">Close</button>
+      </div>
+      <div id="modalBody" style="margin-top:12px;color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <script>
+    // ========== small interactive JS ==========
+
+    // Year
+    document.getElementById('year').innerText = new Date().getFullYear();
+
+    // Mobile menu (simple toggle to show nav)
+    const menuBtn = document.getElementById('menuBtn');
+    const nav = document.querySelector('.nav');
+    menuBtn && menuBtn.addEventListener('click', () => {
+      if(nav.style.display === 'flex') nav.style.display = 'none';
+      else nav.style.display = 'flex';
+    });
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('.nav a, a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href');
+        if(!href || !href.startsWith('#')) return;
+        e.preventDefault();
+        const id = href.slice(1);
+        const el = document.getElementById(id);
+        if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+
+    // Accordion
+    document.querySelectorAll('.accordion-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        const content = item.querySelector('.accordion-content');
+        if(content.style.maxHeight && content.style.maxHeight !== '0px'){
+          content.style.maxHeight = null;
+        } else {
+          // close others
+          document.querySelectorAll('.accordion-content').forEach(c=>c.style.maxHeight = null);
+          content.style.maxHeight = content.scrollHeight + 'px';
+        }
+      });
+    });
+
+    // Modal open for schedule
+    function openTimetable(course){
+      document.getElementById('modalTitle').innerText = course + ' — Weekly Timings';
+      document.getElementById('modalBody').innerHTML = '<p class="muted">Here is a sample weekly schedule for '+course+'.<ul class="muted"><li>Mon 5pm–7pm: Theory</li><li>Wed 5pm–7pm: Practice & Doubts</li><li>Sat 10am–1pm: Mock Test</li></ul></p>';
+      document.getElementById('modal').classList.add('open');
+    }
+    document.getElementById('closeModal').addEventListener('click', ()=>document.getElementById('modal').classList.remove('open'));
+    document.getElementById('modal').addEventListener('click', (e)=>{ if(e.target.id === 'modal') document.getElementById('modal').classList.remove('open'); });
+
+    // Enroll/demo buttons behavior
+    document.querySelectorAll('.enroll, #ctaEnroll').forEach(b=>{
+      b.addEventListener('click', (e)=>{
+        const course = e.currentTarget.dataset.course || 'General Enrollment';
+        alert('Thanks! You clicked to enroll for: ' + course + '. (Demo form — integrate backend to capture data)');
+      });
+    });
+    document.getElementById('ctaDemo').addEventListener('click', ()=>{ document.getElementById('contact').scrollIntoView({behavior:'smooth'}); });
+
+    // Contact form demo
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('cname').value || 'Friend';
+      const phone = document.getElementById('cphone').value || 'N/A';
+      const course = document.getElementById('ccourse').value || 'Not specified';
+      alert('Thanks ' + name + '! We received your request. We will call you at ' + phone + ' regarding ' + course + '. (Demo)');
+      this.reset();
+    });
+    document.getElementById('resetBtn').addEventListener('click', ()=>document.getElementById('contactForm').reset());
+
+    // Simple testimonials auto-scroll (carousel)
+    (function testimonialAutoscroll(){
+      const wrap = document.querySelector('.testimonials');
+      if(!wrap) return;
+      let pos = 0;
+      setInterval(()=>{
+        pos += 1;
+        if(pos > wrap.children.length - 1) pos = 0;
+        wrap.scrollTo({left: wrap.children[pos].offsetLeft, behavior: 'smooth'});
+      }, 3500);
+    })();
+
+    // Quick call demo
+    document.getElementById('callBtn').addEventListener('click', ()=>alert('Calling +91-98765-43210... (demo)'));
+const toggleBtn = document.getElementById('toggleTheme');
+const body = document.body;
+
+body.classList.add('dark'); // default mode
+
+toggleBtn.addEventListener('click', () => {
+  if (body.classList.contains('dark')) {
+    body.classList.remove('dark');
+    body.classList.add('light');
+    toggleBtn.textContent = "🌙 Dark Mode";
+  } else {
+    body.classList.remove('light');
+    body.classList.add('dark');
+    toggleBtn.textContent = "☀️ Light Mode";
+  }
+});
+  </script>
+</body>
+</html>
